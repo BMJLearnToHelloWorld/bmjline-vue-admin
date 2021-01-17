@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'BMJLINE VUE ADMIN',
 
   /**
    * @type {boolean} true | false
