@@ -14,7 +14,7 @@
     "test:ci": "npm run lint && npm run test:unit"
   },
   "dependencies": {
-    "@tinymce/tinymce-vue": "^4.0.0",
+    "@tinymce/tinymce-vue": "^3.2.8",
     "axios": "0.21.1",
     "core-js": "3.8.2",
     "element-ui": "2.15.0",
@@ -22,6 +22,7 @@
     "normalize.css": "8.0.1",
     "nprogress": "0.2.0",
     "path-to-regexp": "6.2.0",
+    "tinymce": "^5.6.2",
     "vue": "2.6.12",
     "vue-router": "3.4.9",
     "vuex": "3.6.0"
