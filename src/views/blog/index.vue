@@ -8,58 +8,101 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="ID" width="70">
         <template slot-scope="scope">
           {{ scope.$index }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.blogName }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="Descr">
         <template slot-scope="scope">
+          <span>{{ scope.row.blogDescr }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Author" align="center" width="150">
+        <!-- <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
-        </template>
+        </template> -->
+        <span>bmj</span>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
+      <el-table-column label="Pageviews" align="center" width="120">
+        <!-- <template slot-scope="scope">
           {{ scope.row.pageviews }}
-        </template>
+        </template> -->
+        <span>1</span>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column
+        class-name="status-col"
+        label="Status"
+        width="100"
+        align="center"
+      >
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{
+            scope.row.status
+          }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column
+        align="center"
+        prop="publishedTime"
+        label="Publish_time"
+        width="250"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.publishedTime }}</span>
         </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="updatedTime"
+        label="Update_time"
+        width="250"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time" />
+          <span>{{ scope.row.updatedTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Edit" align="center" width="135">
+        <el-button type="primary" size="mini" icon="el-icon-edit" circle />
+        <el-button type="success" size="mini" icon="el-icon-check" circle />
+        <el-button type="danger" size="mini" icon="el-icon-delete" circle />
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getAllBlogList } from '@/api/blog'
 
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
         published: 'success',
-        draft: 'gray',
+        draft: '',
         deleted: 'danger'
       }
       return statusMap[status]
+    },
+    statusLabel(status) {
+      const labelMap = {
+        '1': 'published',
+        '0': 'draft',
+        '-1': 'deleted'
+      }
+      return labelMap[status]
     }
   },
   data() {
     return {
-      list: null,
+      list: [],
       listLoading: true
     }
   },
@@ -69,8 +112,12 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
+      const labelFilter = this.$options.filters['statusLabel']
+      getAllBlogList({ page: 1 }).then(res => {
+        this.list = res.data
+        this.list.forEach(item => {
+          item.status = labelFilter(item.status)
+        })
         this.listLoading = false
       })
     }

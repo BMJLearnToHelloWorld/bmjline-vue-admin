@@ -7,3 +7,11 @@ export function getList(params) {
     params
   })
 }
+
+export function getAllBlogList(params) {
+  return request({
+    url: '/blog/query/all',
+    method: 'post',
+    data: params
+  })
+}
