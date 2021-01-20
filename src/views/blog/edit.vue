@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <tinymce-editor ref="tinymceEditor" v-model="editorValue" />
+    <tinymce-editor ref="tinymceEditor" v-model="blogDetail.blogContent" />
     <el-row class="editor_btn_row">
-      <el-button type="danger" round @click="clearContent">清空</el-button>
-      <el-button type="primary" round :loading="loadingSaveBtn" @click="saveContent">保存</el-button>
-      <el-button type="success" round :loading="loadingPublishBtn" @click="publishContent">保存并发布</el-button>
+      <el-button type="danger" round @click="clearHandler">清空</el-button>
+      <el-button type="primary" round :loading="loadingSaveBtn" @click="saveHandler">保存</el-button>
+      <el-button type="success" round :loading="loadingPublishBtn" @click="saveAndPublishHandler">保存并发布</el-button>
     </el-row>
     {{ editorValue }}
   </div>
@@ -12,6 +12,7 @@
 
 <script>
 import TinymceEditor from '@/components/tinymce/index'
+import { getBlogDetailById, saveBlog } from '@/api/blog'
 export default {
   components: {
     TinymceEditor
@@ -22,24 +23,42 @@ export default {
       loadingClearBtn: false,
       loadingSaveBtn: false,
       loadingPublishBtn: false,
-      blogId: ''
+      blogId: '',
+      blogDetail: {}
     }
   },
   created() {
-    this.getBLogId()
+    this.initBlogDetail()
   },
   methods: {
-    getBLogId() {
-      console.log(this.$route.path)
-      this.blogId = this.$route.path.id
+    initBlogDetail() {
+      if (this.$route.query.id !== undefined && this.$route.query.id !== '') {
+        this.blogId = this.$route.query.id
+        getBlogDetailById(this.blogId).then(res => {
+          this.blogDetail = res.data
+        })
+      }
     },
-    clearContent() {
+    clearHandler() {
       this.$refs.tinymceEditor.clear()
     },
-    saveContent() {
-      console.log(this.editorValue)
+    saveHandler() {
+      saveBlog(this.blogDetail).then(res => {
+        if (res.data.code === 200) {
+          this.$notify({
+            title: 'Success',
+            message: res.data.message,
+            type: 'success'
+          });
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: res.data.message
+          });
+        }
+      })
     },
-    publishContent() {
+    saveAndPublishHandler() {
       console.log(this.editorValue)
     }
   }

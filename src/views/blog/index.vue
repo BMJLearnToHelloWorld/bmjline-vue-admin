@@ -69,17 +69,19 @@
           <span>{{ scope.row.updatedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Edit" align="center" width="135">
-        <el-button type="primary" size="mini" icon="el-icon-edit" circle />
-        <el-button type="success" size="mini" icon="el-icon-check" circle />
-        <el-button type="danger" size="mini" icon="el-icon-delete" circle />
+      <el-table-column label="Action" align="center" width="135">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editHandler(scope.row)" />
+          <el-button type="success" size="mini" icon="el-icon-check" circle v-show="scope.row.status !== '1'" @click="publishHandler(scope.row)" />
+          <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteHandler(scope.row)" />
+        </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import { getAllBlogList } from '@/api/blog'
+import { getAllBlogList, publishBlogById, deleteBlogById } from '@/api/blog'
 
 export default {
   filters: {
@@ -119,6 +121,46 @@ export default {
           item.status = labelFilter(item.status)
         })
         this.listLoading = false
+      })
+    },
+    editHandler(rowData) {
+      this.$router.push({
+        path: '/blog/edit',
+        query: {
+          id: rowData.id
+        }
+      })
+    },
+    publishHandler(rowData) {
+      publishBlogById(rowData.id).then(res => {
+        if (res.data.code === 200) {
+          this.$notify({
+            title: 'Success',
+            message: res.data.message,
+            type: 'success'
+          });
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: res.data.message
+          });
+        }
+      })
+    },
+    deleteHandler(rowData) {
+      deleteBlogById(rowData.id).then(res => {
+        if (res.data.code === 200) {
+          this.$notify({
+            title: 'Success',
+            message: res.data.message,
+            type: 'success'
+          });
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: res.data.message
+          });
+        }
       })
     }
   }
