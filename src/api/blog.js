@@ -29,9 +29,17 @@ export function deleteBlogById(id) {
   })
 }
 
-export function saveBlog(params) {
+export function newBlog(params) {
   return request({
-    url: '/blog/save',
+    url: '/blog/new',
+    method: 'post',
+    data: params
+  })
+}
+
+export function updateBlog(params) {
+  return request({
+    url: '/blog/update',
     method: 'post',
     data: params
   })

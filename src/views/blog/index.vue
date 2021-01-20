@@ -133,32 +133,32 @@ export default {
     },
     publishHandler(rowData) {
       publishBlogById(rowData.id).then(res => {
-        if (res.data.code === 200) {
+        if (res.code === 200) {
           this.$notify({
             title: 'Success',
-            message: res.data.message,
+            message: res.data,
             type: 'success'
           });
         } else {
           this.$notify.error({
             title: 'Error',
-            message: res.data.message
+            message: res.data
           });
         }
       })
     },
     deleteHandler(rowData) {
       deleteBlogById(rowData.id).then(res => {
-        if (res.data.code === 200) {
+        if (res.code === 200) {
           this.$notify({
             title: 'Success',
-            message: res.data.message,
+            message: res.data,
             type: 'success'
           });
         } else {
           this.$notify.error({
             title: 'Error',
-            message: res.data.message
+            message: res.data
           });
         }
       })

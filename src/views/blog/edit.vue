@@ -1,25 +1,28 @@
 <template>
   <div class="app-container">
-    <tinymce-editor ref="tinymceEditor" v-model="blogDetail.blogContent" />
-    <el-row class="editor_btn_row">
-      <el-button type="danger" round @click="clearHandler">清空</el-button>
-      <el-button type="primary" round :loading="loadingSaveBtn" @click="saveHandler">保存</el-button>
-      <el-button type="success" round :loading="loadingPublishBtn" @click="saveAndPublishHandler">保存并发布</el-button>
-    </el-row>
-    {{ editorValue }}
+    <div v-loading="editLoading">
+      <tinymce-editor ref="tinymceEditor" v-model="blogDetail.blogContent" />
+      <el-row class="editor_btn_row">
+        <el-button type="danger" round @click="clearHandler">清空</el-button>
+        <el-button type="primary" round :loading="loadingSaveBtn" @click="saveHandler">保存</el-button>
+        <el-button type="success" round :loading="loadingPublishBtn" @click="saveAndPublishHandler">保存并发布</el-button>
+      </el-row>
+      {{ blogDetail.blogContent }}
+    </div>
   </div>
 </template>
 
 <script>
 import TinymceEditor from '@/components/tinymce/index'
-import { getBlogDetailById, saveBlog } from '@/api/blog'
+import { getBlogDetailById, newBlog, updateBlog } from '@/api/blog'
 export default {
   components: {
     TinymceEditor
   },
   data() {
     return {
-      editorValue: '',
+      // editorValue: '',
+      editLoading: false,
       loadingClearBtn: false,
       loadingSaveBtn: false,
       loadingPublishBtn: false,
@@ -43,23 +46,40 @@ export default {
       this.$refs.tinymceEditor.clear()
     },
     saveHandler() {
-      saveBlog(this.blogDetail).then(res => {
-        if (res.data.code === 200) {
-          this.$notify({
-            title: 'Success',
-            message: res.data.message,
-            type: 'success'
-          });
-        } else {
-          this.$notify.error({
-            title: 'Error',
-            message: res.data.message
-          });
-        }
-      })
+      if (this.blogId === '') {
+        newBlog(this.blogDetail).then(res => {
+          if (res.code === 200) {
+            this.$notify({
+              title: 'Success',
+              message: res.data,
+              type: 'success'
+            });
+          } else {
+            this.$notify.error({
+              title: 'Error',
+              message: res.data
+            });
+          }
+        })
+      } else {
+        updateBlog(this.blogDetail).then(res => {
+          if (res.code === 200) {
+            this.$notify({
+              title: 'Success',
+              message: res.data,
+              type: 'success'
+            });
+          } else {
+            this.$notify.error({
+              title: 'Error',
+              message: res.data
+            });
+          }
+        })
+      }
     },
     saveAndPublishHandler() {
-      console.log(this.editorValue)
+      console.log(this.blogDetail)
     }
   }
 }
