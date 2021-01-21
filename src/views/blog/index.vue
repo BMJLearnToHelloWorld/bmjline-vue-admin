@@ -10,7 +10,7 @@
     >
       <el-table-column align="center" label="ID" width="70">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
@@ -72,7 +72,7 @@
       <el-table-column label="Action" align="center" width="135">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editHandler(scope.row)" />
-          <el-button type="success" size="mini" icon="el-icon-check" circle v-show="scope.row.status !== '1'" @click="publishHandler(scope.row)" />
+          <el-button v-show="scope.row.status !== '1'" type="success" size="mini" icon="el-icon-check" circle @click="publishHandler(scope.row)" />
           <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteHandler(scope.row)" />
         </template>
       </el-table-column>
@@ -138,12 +138,12 @@ export default {
             title: 'Success',
             message: res.data,
             type: 'success'
-          });
+          })
         } else {
           this.$notify.error({
             title: 'Error',
             message: res.data
-          });
+          })
         }
       })
     },
@@ -154,12 +154,12 @@ export default {
             title: 'Success',
             message: res.data,
             type: 'success'
-          });
+          })
         } else {
           this.$notify.error({
             title: 'Error',
             message: res.data
-          });
+          })
         }
       })
     }

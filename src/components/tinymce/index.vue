@@ -5,6 +5,7 @@
       api-key="no-api-key"
       :init="init"
       :disable="disabled"
+      @onSelectionChange="onSelectionChangeHandler"
     />
   </div>
 </template>
@@ -37,6 +38,10 @@ export default {
       type: [String, Array],
       default:
         'newdocument code | undo redo | formatselect visualaid | fontsizeselect | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | lists image media table link unlink | emoticons insertdatetime charmap | fullscreen searchreplace | removeformat'
+    },
+    height: {
+      type: Number,
+      default: 500
     }
   },
   data() {
@@ -45,7 +50,7 @@ export default {
         // language_url: '/public/tinymce/js/tinymce/langs/zh_CN.js',
         // language: 'zh_CN',
         // skin_url: '/tinymce/skins/ui/oxide', // 主题样式
-        height: 600,
+        height: this.height,
         menubar: false,
         plugins: this.plugins,
         toolbar: this.toolbar,
@@ -79,6 +84,9 @@ export default {
     // 可以添加一些自己的自定义事件，如清空内容
     clear() {
       this.tinymceValue = ''
+    },
+    onSelectionChangeHandler() {
+      this.$emit('on-change-wordcount', tinymce.activeEditor.plugins.wordcount.body.getCharacterCountWithoutSpaces())
     }
   }
 }
