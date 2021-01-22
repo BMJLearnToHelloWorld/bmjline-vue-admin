@@ -23,6 +23,7 @@
       <tinymce-editor
         ref="tinymceEditor"
         v-model="blogDetail.blogContent"
+        class="blog_inline_input"
         @on-change-wordcount="onChangeWordCountHandler"
       />
     </div>
@@ -43,7 +44,7 @@
         ref="saveTagInputTag"
         v-model="inputTagValue"
         class="input-new-tag"
-        size="mini"
+        size="small"
         @keyup.enter.native="handleInputTagConfirm"
         @blur="handleInputTagConfirm"
       />
@@ -79,7 +80,14 @@
         <span>{{ blogDetail.updatedTime }}</span>
       </div>
     </div>
-    <div class="edit_block">
+    <div v-if="blogDetail.publishedTime" class="edit_block">
+      <div class="blog_inline_title">Published Time:</div>
+      <div class="blog_inline_value">
+        <i class="el-icon-time" />
+        <span>{{ blogDetail.publishedTime }}</span>
+      </div>
+    </div>
+    <div>
       <el-row class="editor_btn_row">
         <el-button type="danger" round @click="clearHandler">清空</el-button>
         <el-button
@@ -98,13 +106,12 @@
         >
       </el-row>
     </div>
-    {{ blogDetail }}
   </div>
 </template>
 
 <script>
 import TinymceEditor from '@/components/tinymce/index'
-import { getBlogDetailById, newBlog, updateBlog } from '@/api/blog'
+import { getBlogDetailById, newBlog, updateBlog, saveAndPubishBlog } from '@/api/blog'
 export default {
   components: {
     TinymceEditor
@@ -133,6 +140,20 @@ export default {
         getBlogDetailById(this.blogId).then(res => {
           this.blogDetail = res.data
         })
+      } else {
+        this.blogDetail = {
+          id: '',
+          blogName: '',
+          blogDescr: '',
+          blogContent: '',
+          blogTag: [],
+          blogLength: '',
+          readingTime: '',
+          createdTime: '',
+          updatedTime: '',
+          publishedTime: '',
+          status: '0'
+        }
       }
     },
     // clear tinymce component content
@@ -175,8 +196,23 @@ export default {
     },
     // save and publish blog detail
     saveAndPublishHandler() {
-      console.log(this.blogDetail)
-      // TODO
+      saveAndPubishBlog(this.blogDetail).then(res => {
+        if (res.code === 200) {
+          this.$notify({
+            title: 'Success',
+            message: res.data,
+            type: 'success'
+          })
+          this.$router.push({
+            path: '/blog/index'
+          })
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: res.data
+          })
+        }
+      })
     },
     // handler tag when use remove button
     handleCloseTag(index) {

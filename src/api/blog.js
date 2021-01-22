@@ -44,3 +44,11 @@ export function updateBlog(params) {
     data: params
   })
 }
+
+export function saveAndPubishBlog(params) {
+  return request({
+    url: '/blog/save-publish',
+    method: 'post',
+    data: params
+  })
+}
