@@ -41,7 +41,11 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-form-item prop="verified">
+        <SlideVerify @on-verify="verifyHandler" />
+      </el-form-item>
+
+      <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
@@ -54,9 +58,13 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import SlideVerify from '@/components/SlideVerify'
 
 export default {
   name: 'Login',
+  components: {
+    SlideVerify
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -75,7 +83,8 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        verified: false
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -95,6 +104,9 @@ export default {
     }
   },
   methods: {
+    verifyHandler(value) {
+      this.loginForm.verified = value
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -106,6 +118,10 @@ export default {
       })
     },
     handleLogin() {
+      if (!this.loginForm.verified) {
+        this.$message.warning('Please slide the bar to verify')
+        return false
+      }
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -166,7 +182,7 @@ $cursor: #fff;
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    border-radius: 0px;
     color: #454545;
   }
 }
@@ -233,5 +249,8 @@ $light_gray:#eee;
     cursor: pointer;
     user-select: none;
   }
+}
+.el-button {
+  border-radius: 0px;
 }
 </style>

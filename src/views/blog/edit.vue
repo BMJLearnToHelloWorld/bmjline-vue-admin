@@ -37,7 +37,7 @@
         effect="plain"
         :disable-transitions="false"
         @close="handleCloseTag(index)"
-        >{{ tag }}
+      >{{ tag }}
       </el-tag>
       <el-input
         v-if="inputTagVisible"
@@ -53,8 +53,7 @@
         class="button-new-tag"
         size="small"
         @click="showInputTag"
-        >+ New Tag</el-button
-      >
+      >+ New Tag</el-button>
     </div>
     <div class="edit_block">
       <div class="blog_inline_title">Reading Time:</div>
@@ -95,22 +94,20 @@
           round
           :loading="loadingSaveBtn"
           @click="saveHandler"
-          >保存</el-button
-        >
+        >保存</el-button>
         <el-button
           type="success"
           round
           :loading="loadingPublishBtn"
           @click="saveAndPublishHandler"
-          >保存并发布</el-button
-        >
+        >保存并发布</el-button>
       </el-row>
     </div>
   </div>
 </template>
 
 <script>
-import TinymceEditor from '@/components/tinymce/index'
+import TinymceEditor from '@/components/Tinymce/index'
 import { getBlogDetailById, newBlog, updateBlog, saveAndPubishBlog } from '@/api/blog'
 export default {
   components: {
