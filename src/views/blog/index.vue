@@ -134,6 +134,7 @@ export default {
     publishHandler(rowData) {
       publishBlogById(rowData.id).then(res => {
         if (res.code === 200) {
+          this.fetchData()
           this.$notify({
             title: 'Success',
             message: res.data,

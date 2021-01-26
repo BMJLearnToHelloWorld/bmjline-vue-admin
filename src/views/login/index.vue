@@ -59,6 +59,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import SlideVerify from '@/components/SlideVerify'
+import { encrypt } from '@/utils/secret'
 
 export default {
   name: 'Login',
@@ -125,6 +126,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          this.loginForm.password = encrypt(this.loginForm.password)
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
