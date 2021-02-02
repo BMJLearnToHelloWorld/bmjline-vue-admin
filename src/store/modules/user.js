@@ -6,7 +6,7 @@ import { encrypt } from '@/utils/secret'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
+    username: '',
     avatar: '',
     introduction: '',
     roles: []
@@ -22,8 +22,8 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  SET_NAME: (state, username) => {
+    state.username = username
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -55,19 +55,19 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo().then(response => {
         const { data } = response
 
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar, introduction, roles } = data
+        const { username, avatar, introduction, roles } = data
 
         if (!roles || !roles.length > 0) {
           reject('roles are empty, please check!')
         }
-        commit('SET_NAME', name)
+        commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         commit('SET_ROLES', roles)
