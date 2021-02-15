@@ -88,16 +88,14 @@
     </div>
     <div>
       <el-row class="editor_btn_row">
-        <el-button type="danger" round @click="clearHandler">清空</el-button>
+        <el-button type="danger" @click="clearHandler">清空</el-button>
         <el-button
           type="primary"
-          round
           :loading="loadingSaveBtn"
           @click="saveHandler"
         >保存</el-button>
         <el-button
           type="success"
-          round
           :loading="loadingPublishBtn"
           @click="saveAndPublishHandler"
         >保存并发布</el-button>
@@ -149,7 +147,8 @@ export default {
           createdTime: '',
           updatedTime: '',
           publishedTime: '',
-          status: '0'
+          status: '0',
+          contentType: 'RTF'
         }
       }
     },
@@ -281,6 +280,9 @@ export default {
   vertical-align: bottom;
 }
 .el-tag--plain.el-tag--info {
+  border-radius: 0px;
+}
+.el-button {
   border-radius: 0px;
 }
 </style>

@@ -13,6 +13,8 @@
 <script>
 import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
+import plugins from './plugins'
+import toolbar from './toolbar'
 
 export default {
   name: 'Tinymce',
@@ -32,12 +34,12 @@ export default {
     plugins: {
       type: [String, Array],
       default:
-        'code lists image media table textcolor colorpicker wordcount contextmenu emoticons link insertdatetime charmap fullscreen searchreplace'
+        'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
     },
     toolbar: {
       type: [String, Array],
       default:
-        'newdocument code | undo redo | formatselect visualaid | fontsizeselect | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | lists image media table link unlink | emoticons insertdatetime charmap | fullscreen searchreplace | removeformat'
+        'searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat subscript superscript code codesample hr bullist numlist link image charmap preview anchor pagebreak insertdatetime media table emoticons forecolor backcolor fullscreen'
     },
     height: {
       type: Number,
@@ -48,14 +50,16 @@ export default {
     return {
       init: {
         // language_url: '/public/tinymce/js/tinymce/langs/zh_CN.js',
-        // language: 'zh_CN',
+        language: 'en',
         // skin_url: '/tinymce/skins/ui/oxide', // 主题样式
         height: this.height,
         menubar: false,
-        plugins: this.plugins,
-        toolbar: this.toolbar,
+        plugins: plugins.length > 0 ? plugins : this.plugins,
+        toolbar: toolbar.length > 0 ? toolbar : this.toolbar,
         browser_spellcheck: true, // 拼写检查
         statusbar: true, // 隐藏编辑器底部的状态栏
+        end_container_on_empty_block: true,
+        default_link_target: '_blank',
         paste_data_images: true, // 允许粘贴图像
         images_upload_handler: function(blobInfo, success, failure) {
           console.log(blobInfo.filename())

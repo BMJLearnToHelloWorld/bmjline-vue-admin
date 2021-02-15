@@ -124,12 +124,21 @@ export default {
       })
     },
     editHandler(rowData) {
-      this.$router.push({
-        path: '/blog/edit',
-        query: {
-          id: rowData.id
-        }
-      })
+      if (rowData.contentType === 'RTF') {
+        this.$router.push({
+          path: '/blog/editors/tinymce',
+          query: {
+            id: rowData.id
+          }
+        })
+      } else if (rowData.contentType === 'MD') {
+        this.$router.push({
+          path: '/blog/editors/markdown',
+          query: {
+            id: rowData.id
+          }
+        })
+      }
     },
     publishHandler(rowData) {
       publishBlogById(rowData.id).then(res => {
