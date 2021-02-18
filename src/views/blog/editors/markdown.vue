@@ -1,5 +1,5 @@
 <template>
-  <div class="components-container">
+  <div v-loading="editLoading" class="app-container">
     <div class="edit_block">
       <div class="blog_inline_title">Blog Title:</div>
       <el-input
@@ -23,7 +23,7 @@
       <div class="editor-container">
         <markdown-editor
           ref="markdownEditor"
-          v-model="mdContent"
+          v-model="blogDetail.blogContent"
           height="500px"
           class="blog_inline_input"
         />
@@ -108,16 +108,18 @@
 
 <script>
 import MarkdownEditor from '@/components/Markdown'
-import { getBlogDetailById, newBlog, updateBlog, saveAndPubishBlog } from '@/api/blog'
+import {
+  getBlogDetailById,
+  newBlog,
+  updateBlog,
+  saveAndPubishBlog
+} from '@/api/blog'
 
 export default {
-  name: 'MarkdownDemo',
   components: { MarkdownEditor },
   data() {
     return {
-      mdContent: '',
       mdValue: '',
-      mdHtml: '',
       languageTypeList: {
         en: 'en_US',
         zh: 'zh_CN'
@@ -155,7 +157,7 @@ export default {
           blogDescr: '',
           blogContent: '',
           blogTag: [],
-          blogLength: '',
+          blogLength: 0,
           readingTime: '',
           createdTime: '',
           updatedTime: '',
@@ -241,9 +243,6 @@ export default {
       }
       this.inputTagVisible = false
       this.inputTagValue = ''
-    },
-    getHtml() {
-      this.mdHtml = this.$refs.markdownEditor.getHtml()
     },
     getValue() {
       this.mdValue = this.$refs.markdownEditor.getValue()

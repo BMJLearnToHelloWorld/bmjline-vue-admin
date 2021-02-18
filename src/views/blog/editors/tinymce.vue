@@ -142,7 +142,7 @@ export default {
           blogDescr: '',
           blogContent: '',
           blogTag: [],
-          blogLength: '',
+          blogLength: 0,
           readingTime: '',
           createdTime: '',
           updatedTime: '',

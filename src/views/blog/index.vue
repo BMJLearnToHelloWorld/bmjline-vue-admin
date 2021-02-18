@@ -71,9 +71,28 @@
       </el-table-column>
       <el-table-column label="Action" align="center" width="135">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editHandler(scope.row)" />
-          <el-button v-show="scope.row.status !== '1'" type="success" size="mini" icon="el-icon-check" circle @click="publishHandler(scope.row)" />
-          <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteHandler(scope.row)" />
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-edit"
+            circle
+            @click="editHandler(scope.row)"
+          />
+          <el-button
+            v-show="scope.row.status !== '1'"
+            type="success"
+            size="mini"
+            icon="el-icon-check"
+            circle
+            @click="publishHandler(scope.row)"
+          />
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+            circle
+            @click="deleteHandler(scope.row)"
+          />
         </template>
       </el-table-column>
     </el-table>
