@@ -84,6 +84,7 @@
             size="mini"
             icon="el-icon-check"
             circle
+            :disabled="isGuest"
             @click="publishHandler(scope.row)"
           />
           <el-button
@@ -91,6 +92,7 @@
             size="mini"
             icon="el-icon-delete"
             circle
+            :disabled="isGuest"
             @click="deleteHandler(scope.row)"
           />
         </template>
@@ -124,7 +126,8 @@ export default {
   data() {
     return {
       list: [],
-      listLoading: true
+      listLoading: true,
+      isGuest: this.$store.getters.roles.includes('guest')
     }
   },
   created() {

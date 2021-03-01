@@ -15,6 +15,7 @@ import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
 import plugins from './plugins'
 import toolbar from './toolbar'
+import minioClient from '@/utils/minio'
 
 export default {
   name: 'Tinymce',
@@ -62,7 +63,42 @@ export default {
         default_link_target: '_blank',
         paste_data_images: true, // 允许粘贴图像
         images_upload_handler: function(blobInfo, success, failure) {
-          console.log(blobInfo.filename())
+          // const myDate = new Date()
+          // const fullYear = myDate.getFullYear()
+          const fullYear = 'test'
+          minioClient.bucketExists(fullYear, function(err, exists) {
+            if (err) {
+              minioClient.makeBucket(fullYear, function(err) {
+                if (err) {
+                  failure(err)
+                }
+                minioClient.putObject(
+                  fullYear,
+                  blobInfo.filename(),
+                  blobInfo.blob().stream(),
+                  function(err, objInfo) {
+                    if (err) {
+                      failure(err) // err should be null
+                    }
+                    success(objInfo)
+                  }
+                )
+              })
+            }
+            if (exists) {
+              minioClient.putObject(
+                fullYear,
+                blobInfo.filename(),
+                blobInfo.blob().stream(),
+                function(err, objInfo) {
+                  if (err) {
+                    failure(err) // err should be null
+                  }
+                  success(objInfo)
+                }
+              )
+            }
+          })
         }
       },
       tinymceValue: this.value
@@ -90,7 +126,10 @@ export default {
       this.tinymceValue = ''
     },
     onSelectionChangeHandler() {
-      this.$emit('on-change-wordcount', tinymce.activeEditor.plugins.wordcount.body.getCharacterCountWithoutSpaces())
+      this.$emit(
+        'on-change-wordcount',
+        tinymce.activeEditor.plugins.wordcount.body.getCharacterCountWithoutSpaces()
+      )
     }
   }
 }

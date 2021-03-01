@@ -82,7 +82,7 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
+        username: 'guest',
         password: '',
         verified: false
       },

@@ -92,11 +92,13 @@
         <el-button
           type="primary"
           :loading="loadingSaveBtn"
+          :disabled="isGuest"
           @click="saveHandler"
         >保存</el-button>
         <el-button
           type="success"
           :loading="loadingPublishBtn"
+          :disabled="isGuest"
           @click="saveAndPublishHandler"
         >保存并发布</el-button>
       </el-row>
@@ -121,7 +123,8 @@ export default {
       blogId: '',
       blogDetail: {},
       inputTagVisible: false,
-      inputTagValue: ''
+      inputTagValue: '',
+      isGuest: this.$store.getters.roles.includes('guest')
     }
   },
   created() {

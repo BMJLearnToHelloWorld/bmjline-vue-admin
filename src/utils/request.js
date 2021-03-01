@@ -15,13 +15,13 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
 
-    if (store.getters.roles.includes('guest')) {
-      Message({
-        message: 'you have no permission',
-        type: 'error',
-        duration: 5 * 1000
-      })
-    }
+    // if (store.getters.roles.includes('guest')) {
+    //   Message({
+    //     message: 'you have no permission',
+    //     type: 'warning',
+    //     duration: 5 * 1000
+    //   })
+    // }
 
     if (store.getters.token) {
       // let each request carry token
