@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getVerifyImage(data) {
+  return request({
+    url: '/admin/verifyImage/' + data,
+    method: 'get'
+  })
+}
+
 export function login(data) {
   return request({
     url: '/admin/user/login',

@@ -163,54 +163,33 @@ export default {
     saveHandler() {
       if (this.blogId === '') {
         newBlog(this.blogDetail).then(res => {
-          if (res.code === 200) {
-            this.$notify({
-              title: 'Success',
-              message: res.data,
-              type: 'success'
-            })
-          } else {
-            this.$notify.error({
-              title: 'Error',
-              message: res.data
-            })
-          }
+          this.$notify({
+            title: 'Success',
+            message: res.data,
+            type: 'success'
+          })
         })
       } else {
         updateBlog(this.blogDetail).then(res => {
-          if (res.code === 200) {
-            this.$notify({
-              title: 'Success',
-              message: res.data,
-              type: 'success'
-            })
-          } else {
-            this.$notify.error({
-              title: 'Error',
-              message: res.data
-            })
-          }
+          this.$notify({
+            title: 'Success',
+            message: res.data,
+            type: 'success'
+          })
         })
       }
     },
     // save and publish blog detail
     saveAndPublishHandler() {
       saveAndPubishBlog(this.blogDetail).then(res => {
-        if (res.code === 200) {
-          this.$notify({
-            title: 'Success',
-            message: res.data,
-            type: 'success'
-          })
-          this.$router.push({
-            path: '/blog/index'
-          })
-        } else {
-          this.$notify.error({
-            title: 'Error',
-            message: res.data
-          })
-        }
+        this.$notify({
+          title: 'Success',
+          message: res.data,
+          type: 'success'
+        })
+        this.$router.push({
+          path: '/blog/index'
+        })
       })
     },
     // handler tag when use remove button

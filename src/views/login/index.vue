@@ -41,13 +41,32 @@
         </span>
       </el-form-item>
 
-      <el-form-item prop="verified">
+      <el-form-item v-if="!loginForm.verified" prop="verified">
         <SlideVerify @on-verify="verifyHandler" />
+      </el-form-item>
+
+      <el-form-item v-if="loginForm.verified" class="c_verify_form">
+        <span class="svg-container">
+          <svg-icon icon-class="verify" />
+        </span>
+        <el-input
+          ref="verifyCode"
+          v-model="loginForm.verifyCode"
+          placeholder="verify code"
+          name="verifyCode"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+        />
+        <span class="c_verify_image">
+          <img v-if="verifyImage" :src="verifyImage" @click="handleChangeVerifyCode">
+          <img v-else src="@/assets/code404.png" @click="handleChangeVerifyCode">
+        </span>
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div v-if="false" class="tips">
+      <div v-if="true" class="tips">
         <span style="margin-right:20px;">username: guest</span>
         <span> password: 111111</span>
       </div>
@@ -58,6 +77,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { getVerifyImage } from '@/api/user'
 import SlideVerify from '@/components/SlideVerify'
 
 export default {
@@ -83,8 +103,10 @@ export default {
     return {
       loginForm: {
         username: 'guest',
-        password: '',
-        verified: false
+        password: '111111',
+        verified: false,
+        verifyCode: '',
+        currdatetime: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -92,7 +114,8 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      verifyImage: ''
     }
   },
   watch: {
@@ -106,6 +129,14 @@ export default {
   methods: {
     verifyHandler(value) {
       this.loginForm.verified = value
+      this.handleChangeVerifyCode()
+    },
+    handleChangeVerifyCode() {
+      this.loginForm.currdatetime = new Date().getTime()
+      this.loginForm.verifyCode = ''
+      getVerifyImage(this.loginForm.currdatetime).then(res => {
+        this.verifyImage = res.data
+      })
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -252,5 +283,17 @@ $light_gray:#eee;
 }
 .el-button {
   border-radius: 0px;
+}
+
+.c_verify_form .el-input {
+  width: 68% !important;
+}
+
+.c_verify_image {
+  text-align: right;
+  vertical-align: middle;
+  img {
+    vertical-align: middle;
+  }
 }
 </style>

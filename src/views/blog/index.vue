@@ -164,35 +164,21 @@ export default {
     },
     publishHandler(rowData) {
       publishBlogById(rowData.id).then(res => {
-        if (res.code === 200) {
-          this.fetchData()
-          this.$notify({
-            title: 'Success',
-            message: res.data,
-            type: 'success'
-          })
-        } else {
-          this.$notify.error({
-            title: 'Error',
-            message: res.data
-          })
-        }
+        this.fetchData()
+        this.$notify({
+          title: 'Success',
+          message: res.data,
+          type: 'success'
+        })
       })
     },
     deleteHandler(rowData) {
       deleteBlogById(rowData.id).then(res => {
-        if (res.code === 200) {
-          this.$notify({
-            title: 'Success',
-            message: res.data,
-            type: 'success'
-          })
-        } else {
-          this.$notify.error({
-            title: 'Error',
-            message: res.data
-          })
-        }
+        this.$notify({
+          title: 'Success',
+          message: res.data,
+          type: 'success'
+        })
       })
     }
   }

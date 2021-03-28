@@ -71,7 +71,8 @@ export const constantRoutes = [
       {
         path: 'editors',
         name: 'Editors',
-        component: () => import('@/views/blog/editors'),
+        redirect: 'noRedirect',
+        component: () => import('@/views/blog/editors/index'),
         meta: { title: 'Editors', icon: 'el-icon-edit' },
         children: [
           {
