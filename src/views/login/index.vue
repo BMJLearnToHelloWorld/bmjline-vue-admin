@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">Welcome to BMJLINE</h3>
       </div>
 
       <el-form-item prop="username">
@@ -55,13 +55,13 @@
           placeholder="verify code"
           name="verifyCode"
           type="text"
-          tabindex="1"
+          tabindex="3"
           auto-complete="on"
         />
-        <span class="c_verify_image">
+        <div class="c_verify_image">
           <img v-if="verifyImage" :src="verifyImage" @click="handleChangeVerifyCode">
           <img v-else src="@/assets/code404.png" @click="handleChangeVerifyCode">
-        </span>
+        </div>
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
@@ -286,12 +286,14 @@ $light_gray:#eee;
 }
 
 .c_verify_form .el-input {
-  width: 68% !important;
+  width: 50%;
 }
 
 .c_verify_image {
   text-align: right;
   vertical-align: middle;
+  display: inline-block;
+  width: 40%;
   img {
     vertical-align: middle;
   }

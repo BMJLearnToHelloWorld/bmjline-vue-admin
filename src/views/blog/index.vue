@@ -7,39 +7,37 @@
       border
       fit
       highlight-current-row
+      stripe
+      height="86vh"
+      :header-cell-style="{'text-align':'center'}"
     >
-      <el-table-column align="center" label="ID" width="70">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column type="index" :index="indexMethod" align="center" fixed />
+      <el-table-column label="Title" align="left">
         <template slot-scope="scope">
           {{ scope.row.blogName }}
         </template>
       </el-table-column>
-      <el-table-column label="Descr">
+      <el-table-column label="Descr" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.blogDescr }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" align="center" width="150">
+      <el-table-column label="Author" align="center" width="100">
         <!-- <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
         </template> -->
         <span>bmj</span>
       </el-table-column>
-      <el-table-column label="Pageviews" align="center" width="120">
-        <!-- <template slot-scope="scope">
+      <!-- <el-table-column label="Pageviews" align="center" width="50">
+        <template slot-scope="scope">
           {{ scope.row.pageviews }}
-        </template> -->
-        <span>1</span>
-      </el-table-column>
+        </template>
+      </el-table-column> -->
       <el-table-column
         class-name="status-col"
         label="Status"
-        width="100"
         align="center"
+        width="120"
       >
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusFilter">{{
@@ -51,7 +49,7 @@
         align="center"
         prop="publishedTime"
         label="Publish_time"
-        width="250"
+        width="200"
       >
         <template slot-scope="scope">
           <i class="el-icon-time" />
@@ -62,14 +60,14 @@
         align="center"
         prop="updatedTime"
         label="Update_time"
-        width="250"
+        width="200"
       >
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.updatedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Action" align="center" width="135">
+      <el-table-column label="Action" align="center" width="140">
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -134,6 +132,9 @@ export default {
     this.fetchData()
   },
   methods: {
+    indexMethod(index) {
+      return index + 1
+    },
     fetchData() {
       this.listLoading = true
       const labelFilter = this.$options.filters['statusLabel']
