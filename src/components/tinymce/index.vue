@@ -15,7 +15,7 @@ import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
 import plugins from './plugins'
 import toolbar from './toolbar'
-import minioClient from '@/utils/minio'
+import { uploadObj } from '@/api/oss'
 
 export default {
   name: 'Tinymce',
@@ -63,42 +63,15 @@ export default {
         default_link_target: '_blank',
         paste_data_images: true, // 允许粘贴图像
         images_upload_handler: function(blobInfo, success, failure) {
-          // const myDate = new Date()
-          // const fullYear = myDate.getFullYear()
-          const fullYear = 'test'
-          minioClient.bucketExists(fullYear, function(err, exists) {
-            if (err) {
-              minioClient.makeBucket(fullYear, function(err) {
-                if (err) {
-                  failure(err)
-                }
-                minioClient.putObject(
-                  fullYear,
-                  blobInfo.filename(),
-                  blobInfo.blob().stream(),
-                  function(err, objInfo) {
-                    if (err) {
-                      failure(err) // err should be null
-                    }
-                    success(objInfo)
-                  }
-                )
-              })
-            }
-            if (exists) {
-              minioClient.putObject(
-                fullYear,
-                blobInfo.filename(),
-                blobInfo.blob().stream(),
-                function(err, objInfo) {
-                  if (err) {
-                    failure(err) // err should be null
-                  }
-                  success(objInfo)
-                }
-              )
-            }
-          })
+          const formData = new FormData()
+          formData.append('obj', blobInfo.blob())
+          uploadObj(formData)
+            .then(res => {
+              success(res.data)
+            })
+            .catch(err => {
+              failure(err)
+            })
         }
       },
       tinymceValue: this.value
