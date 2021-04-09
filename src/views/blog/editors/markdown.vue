@@ -176,8 +176,14 @@ export default {
         newBlog(this.blogDetail).then(res => {
           this.$notify({
             title: 'Success',
-            message: res.data,
+            message: 'Save blog successfully!',
             type: 'success'
+          })
+          this.$router.push({
+            path: '/blog/editors/markdown',
+            query: {
+              id: res.data
+            }
           })
         })
       } else {
@@ -187,6 +193,7 @@ export default {
             message: res.data,
             type: 'success'
           })
+          this.initBlogDetail()
         })
       }
     },
