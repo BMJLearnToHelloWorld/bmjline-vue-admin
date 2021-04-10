@@ -7,13 +7,21 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 1000 * 60 * 2 // request timeout
 })
 
 // request interceptor
 service.interceptors.request.use(
   config => {
     // do something before request is sent
+
+    // if (store.getters.roles.includes('guest')) {
+    //   Message({
+    //     message: 'you have no permission',
+    //     type: 'warning',
+    //     duration: 5 * 1000
+    //   })
+    // }
 
     if (store.getters.token) {
       // let each request carry token
@@ -43,10 +51,21 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    if (response.status === 401) {
+      Message({
+        message: 'Unauthorized! Please Re-Login',
+        type: 'error',
+        duration: 5 * 1000
+      })
+      store.dispatch('user/resetToken').then(() => {
+        location.reload()
+      })
+    }
+
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 200) {
       Message({
         message: res.message || 'Error',
         type: 'error',

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">Welcome to BMJLINE</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,11 +41,34 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-form-item v-if="!loginForm.verified" prop="verified">
+        <SlideVerify @on-verify="verifyHandler" />
+      </el-form-item>
 
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+      <el-form-item v-if="loginForm.verified" class="c_verify_form">
+        <span class="svg-container">
+          <svg-icon icon-class="verify" />
+        </span>
+        <el-input
+          ref="verifyCode"
+          v-model="loginForm.verifyCode"
+          placeholder="verify code"
+          name="verifyCode"
+          type="text"
+          tabindex="3"
+          auto-complete="on"
+        />
+        <div class="c_verify_image">
+          <img v-if="verifyImage" :src="verifyImage" @click="handleChangeVerifyCode">
+          <img v-else src="@/assets/code404.png" @click="handleChangeVerifyCode">
+        </div>
+      </el-form-item>
+
+      <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+
+      <div v-if="true" class="tips">
+        <span style="margin-right:20px;">username: guest</span>
+        <span> password: 111111</span>
       </div>
 
     </el-form>
@@ -54,9 +77,14 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { getVerifyImage } from '@/api/user'
+import SlideVerify from '@/components/SlideVerify'
 
 export default {
   name: 'Login',
+  components: {
+    SlideVerify
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -74,8 +102,11 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: 'guest',
+        password: '111111',
+        verified: false,
+        verifyCode: '',
+        currdatetime: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -83,7 +114,8 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      verifyImage: ''
     }
   },
   watch: {
@@ -95,6 +127,17 @@ export default {
     }
   },
   methods: {
+    verifyHandler(value) {
+      this.loginForm.verified = value
+      this.handleChangeVerifyCode()
+    },
+    handleChangeVerifyCode() {
+      this.loginForm.currdatetime = new Date().getTime()
+      this.loginForm.verifyCode = ''
+      getVerifyImage(this.loginForm.currdatetime).then(res => {
+        this.verifyImage = res.data
+      })
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -106,12 +149,21 @@ export default {
       })
     },
     handleLogin() {
+      if (!this.loginForm.verified) {
+        this.$message.warning('Please slide the bar to verify')
+        return false
+      }
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
+            this.$notify({
+              title: 'Success',
+              message: 'Welcome back ' + this.loginForm.username,
+              type: 'success'
+            })
           }).catch(() => {
             this.loading = false
           })
@@ -166,7 +218,7 @@ $cursor: #fff;
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    border-radius: 0px;
     color: #454545;
   }
 }
@@ -232,6 +284,23 @@ $light_gray:#eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+}
+.el-button {
+  border-radius: 0px;
+}
+
+.c_verify_form .el-input {
+  width: 50%;
+}
+
+.c_verify_image {
+  text-align: right;
+  vertical-align: middle;
+  display: inline-block;
+  width: 40%;
+  img {
+    vertical-align: middle;
   }
 }
 </style>
