@@ -130,7 +130,6 @@ export default {
       loadingClearBtn: false,
       loadingSaveBtn: false,
       loadingPublishBtn: false,
-      blogId: '',
       blogDetail: {},
       inputTagVisible: false,
       inputTagValue: '',
@@ -149,8 +148,8 @@ export default {
     initBlogDetail() {
       // if there is blog id in query of route, then get blog detail by blog id, else blank
       if (this.$route.query.id !== undefined && this.$route.query.id !== '') {
-        this.blogId = this.$route.query.id
-        getBlogDetailById(this.blogId).then(res => {
+        this.blogDetail.id = this.$route.query.id
+        getBlogDetailById(this.blogDetail.id).then(res => {
           this.blogDetail = res.data
         })
       } else {
@@ -172,17 +171,18 @@ export default {
     },
     // save blog detail
     saveHandler() {
-      if (this.blogId === '') {
+      if (this.blogDetail.id === '') {
         newBlog(this.blogDetail).then(res => {
           this.$notify({
             title: 'Success',
-            message: 'Save blog successfully!',
+            message: 'New blog successfully!',
             type: 'success'
           })
+          this.blogDetail.id = res.data
           this.$router.push({
             path: '/blog/editors/markdown',
             query: {
-              id: res.data
+              id: this.blogDetail.id
             }
           })
         })
@@ -193,7 +193,6 @@ export default {
             message: res.data,
             type: 'success'
           })
-          this.initBlogDetail()
         })
       }
     },

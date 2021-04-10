@@ -180,7 +180,9 @@ export default {
           message: res.data,
           type: 'success'
         })
+        rowData.status = '-1'
       })
+      this.$forceUpdate()
     }
   }
 }
