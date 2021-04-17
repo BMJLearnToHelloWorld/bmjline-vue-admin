@@ -51,7 +51,10 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    if (response.status === 401) {
+    const res = response.data
+
+    // token expired, need to relogin
+    if (res.code === 401) {
       Message({
         message: 'Unauthorized! Please Re-Login',
         type: 'error',
@@ -61,8 +64,6 @@ service.interceptors.response.use(
         location.reload()
       })
     }
-
-    const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
